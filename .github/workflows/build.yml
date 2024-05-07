@@ -31,7 +31,7 @@ jobs:
         run: rustc --version
 
       - name: Build library
-        run: cargo build --release --target {{ matrix.target }}
+        run: cargo build --release --target ${{ matrix.target }}
 
       - name: Create tar.gz
         run: tar -czf  libtuile_crossterm-${{ matrix.target }}.tar.gz target/${{ matrix.target }}/release/libtuile_crossterm.a tuile-crossterm.h

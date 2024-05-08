@@ -8,11 +8,6 @@ on:
 permissions:
   contents: write
 
-concurrency:
-  # Cancels pending runs when a PR gets updated.
-  group: ${{ github.head_ref || github.run_id }}-${{ github.actor }}
-  cancel-in-progress: true
-
 jobs:
   ci:
     strategy:
@@ -32,6 +27,17 @@ jobs:
 
       - name: Build library
         run: cargo build --release --target ${{ matrix.target }}
+
+      - uses: goto-bus-stop/setup-zig@2a9625d550eefc3a9b1a43d342ad655f563f8241
+        if: contains(matrix.target, 'windows')
+        with:
+          version: 0.12.0
+
+      - name: Strip ___chkstk_ms on Windows
+        if: contains(matrix.target, 'windows')
+        run: |
+          mv target/${{ matrix.target }}/release/libtuile_crossterm.a target/${{ matrix.target }}/release/libtuile_crossterm.a.bk
+          zig build strip --release=fast -- --format coff --archive target/${{ matrix.target }}/release/libtuile_crossterm.a.bk --temp-dir ${{ runner.temp }} --remove-symbol ___chkstk_ms --output target/${{ matrix.target }}/release/libtuile_crossterm.a
 
       - name: Create tar.gz
         run: tar -czf  libtuile_crossterm-${{ matrix.target }}.tar.gz tuile-crossterm.h -C target/${{ matrix.target }}/release libtuile_crossterm.a

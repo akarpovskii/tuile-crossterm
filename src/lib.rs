@@ -190,7 +190,7 @@ pub extern "C" fn crossterm_window_size() -> Vec2 {
 
 #[no_mangle]
 pub extern "C" fn crossterm_enable_effect(effect: Effect) {
-    let mut attrs: Attributes = Attribute::Reset.into();
+    let mut attrs: Attributes = Default::default();
     if effect.highlight { attrs.set(Attribute::Reverse); }
     if effect.underline { attrs.set(Attribute::Underlined); }
     if effect.reverse { attrs.set(Attribute::Reverse); }
@@ -204,7 +204,7 @@ pub extern "C" fn crossterm_enable_effect(effect: Effect) {
 
 #[no_mangle]
 pub extern "C" fn crossterm_disable_effect(effect: Effect) {
-    let mut attrs: Attributes = Attribute::Reset.into();
+    let mut attrs: Attributes = Default::default();
     if effect.highlight { attrs.set(Attribute::NoReverse); }
     if effect.underline { attrs.set(Attribute::NoUnderline); }
     if effect.reverse { attrs.set(Attribute::NoReverse); }

@@ -222,7 +222,7 @@ pub extern "C" fn crossterm_use_color(color: ColorPair) {
     let bg = color.bg.into();
     queue!(
         std::io::stdout(),
-        SetBackgroundColor(fg),
+        SetForegroundColor(fg),
         SetBackgroundColor(bg),
     ).unwrap();
 }
